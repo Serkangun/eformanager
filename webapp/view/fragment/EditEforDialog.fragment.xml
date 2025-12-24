@@ -1,0 +1,116 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    
+    <Dialog
+        id="editEforDialog"
+        title="Efor Düzenle"
+        contentWidth="600px">
+        
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="false">
+                
+                <form:content>
+                    
+                    <!-- Efor ID (read-only) -->
+                    <Label text="Efor ID"/>
+                    <Text text="{edit>/EforId}"/>
+                    
+                    <!-- Tarih -->
+                    <Label text="Tarih" required="true"/>
+                    <DatePicker
+                        id="editInputTarih"
+                        placeholder="Tarih seçin"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="dd.MM.yyyy"
+                        value="{edit>/Tarih}"/>
+                    
+                    <!-- İş İsteyen -->
+                    <Label text="İş İsteyen" required="true"/>
+                    <Input
+                        id="editInputIsIsteyen"
+                        placeholder="Örn: KS-SYS-001"
+                        value="{edit>/IsIsteyen}"
+                        maxLength="20"/>
+                    
+                    <!-- Not Bilgisi -->
+                    <Label text="Not Bilgisi"/>
+                    <TextArea
+                        id="editInputNotBilgisi"
+                        placeholder="Açıklama girin"
+                        value="{edit>/NotBilgisi}"
+                        rows="3"
+                        maxLength="255"/>
+                    
+                    <!-- Efor (Gün) -->
+                    <Label text="Efor (Gün)" required="true"/>
+                    <Input
+                        id="editInputEforGun"
+                        placeholder="Örn: 2.5"
+                        value="{edit>/EforGun}"
+                        type="Number"/>
+                    
+                    <!-- Teslim Tarihi -->
+                    <Label text="İş Teslim Tarihi"/>
+                    <DatePicker
+                        id="editInputTeslimTarih"
+                        placeholder="Teslim tarihi"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="dd.MM.yyyy"
+                        value="{edit>/IsTeslimTarihi}"/>
+                    
+                    <!-- İşin Sahibi -->
+                    <Label text="İşin Sahibi" required="true"/>
+                    <Input
+                        id="editInputIsinSahibi"
+                        placeholder="Sorumlu kişi"
+                        value="{edit>/IsinSahibi}"
+                        maxLength="50"/>
+                    
+                    <!-- Durum -->
+                    <Label text="Durum" required="true"/>
+                    <Select
+                        id="editSelectDurum"
+                        selectedKey="{edit>/Durum}">
+                        <items>
+                            <core:Item key="Aktif" text="Aktif"/>
+                            <core:Item key="Tamamlandı" text="Tamamlandı"/>
+                            <core:Item key="İptal" text="İptal"/>
+                        </items>
+                    </Select>
+                    
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        
+        <beginButton>
+            <Button
+                text="Güncelle"
+                type="Emphasized"
+                press="onUpdateEfor"/>
+        </beginButton>
+        
+        <endButton>
+            <Button
+                text="İptal"
+                press="onCancelEdit"/>
+        </endButton>
+        
+    </Dialog>
+</core:FragmentDefinition>

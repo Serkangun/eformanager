@@ -1,0 +1,124 @@
+<mvc:View
+    controllerName="eformanager.controller.EforList"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    
+    <Page
+        title="Efor Listesi"
+        showNavButton="true"
+        navButtonPress="onNavBack">
+        
+        <content>
+            
+            <!-- Toolbar -->
+            <OverflowToolbar>
+                <Title text="Efor Kayıtları" level="H2"/>
+                <ToolbarSpacer/>
+                <Button
+                    icon="sap-icon://add"
+                    text="Yeni Efor"
+                    type="Emphasized"
+                    press="onCreateEfor"/>
+                <Button
+                    icon="sap-icon://excel-attachment"
+                    text="Excel'e Aktar"
+                    press="onExportToExcel"/>
+                <Button
+                    icon="sap-icon://refresh"
+                    press="onRefresh"/>
+            </OverflowToolbar>
+
+            <!-- Özet Panel -->
+            <Panel>
+                <content>
+                    <HBox class="sapUiSmallMargin">
+                        <VBox class="sapUiMediumMarginEnd">
+                            <Label text="Toplam Kayıt" class="sapUiTinyMarginBottom"/>
+                            <Title text="{view>/totalCount}" level="H2" titleStyle="H2"/>
+                        </VBox>
+                        <VBox>
+                            <Label text="Toplam Efor (Gün)" class="sapUiTinyMarginBottom"/>
+                            <Title text="{view>/totalEfor}" level="H2" titleStyle="H2"/>
+                        </VBox>
+                    </HBox>
+                </content>
+            </Panel>
+
+            <!-- Tablo -->
+            <Table
+                id="eforTable"
+                inset="false"
+                items="{
+                    path: '/EforSet',
+                    sorter: {
+                        path: 'Tarih',
+                        descending: true
+                    }
+                }"
+                mode="SingleSelectMaster"
+                growing="true"
+                growingThreshold="20">
+
+                <columns>
+                    <Column width="10em">
+                        <Text text="Efor ID"/>
+                    </Column>
+                    <Column width="10em">
+                        <Text text="Tarih"/>
+                    </Column>
+                    <Column width="10em">
+                        <Text text="İş İsteyen"/>
+                    </Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="Not"/>
+                    </Column>
+                    <Column width="8em" hAlign="End">
+                        <Text text="Efor (Gün)"/>
+                    </Column>
+                    <Column width="10em">
+                        <Text text="Teslim Tarihi"/>
+                    </Column>
+                    <Column width="12em">
+                        <Text text="İşin Sahibi"/>
+                    </Column>
+                    <Column width="8em">
+                        <Text text="Durum"/>
+                    </Column>
+                    <Column width="10em">
+                        <Text text="İşlemler"/>
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem type="Active" press="onEforPress">
+                        <cells>
+                            <Text text="{EforId}"/>
+                            <Text text="{path: 'Tarih', formatter: '.formatDate'}"/>
+                            <Text text="{IsIsteyen}"/>
+                            <Text text="{NotBilgisi}" maxLines="2"/>
+                            <ObjectNumber number="{path: 'EforGun', formatter: '.formatEforGun'}" unit="gün"/>
+                            <Text text="{path: 'IsTeslimTarihi', formatter: '.formatDate'}"/>
+                            <Text text="{IsinSahibi}"/>
+                            <ObjectStatus
+                                text="{Durum}"
+                                state="{= ${Durum} === 'Aktif' ? 'Success' : ${Durum} === 'Tamamlandı' ? 'Information' : 'Error' }"/>
+                            <HBox>
+                                <Button
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    press="onEditEfor"/>
+                                <Button
+                                    icon="sap-icon://delete"
+                                    type="Transparent"
+                                    press="onDeleteEfor"/>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            
+        </content>
+    </Page>
+</mvc:View>

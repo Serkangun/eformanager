@@ -1,0 +1,77 @@
+<mvc:View
+    controllerName="eformanager.controller.Home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    displayBlock="true">
+
+    <Page showHeader="false">
+
+        <content>
+
+            <!-- 🔹 SADECE ARKA PLAN -->
+            <VBox class="appBackground"/>
+
+            <!-- 🔹 GERÇEK İÇERİK -->
+            <VBox
+                class="pageContent sapUiLargeMarginTop"
+                alignItems="Center"
+                width="100%">
+
+                <Title
+                    text="POSEIDON CONSULT"
+                    level="H1"
+                    class="pageTitle sapUiLargeMarginBottom"/>
+
+                <Text
+                    text="Efor Yönetim Sistemi"
+                    
+                    class="sapUiMediumMarginBottom subtitle"/>
+
+                <l:Grid
+                    width="100%"
+                    defaultSpan="XL4 L4 M6 S12"
+                    hSpacing="2"
+                    vSpacing="2"
+                    class="sapUiLargeMarginTop">
+
+                    <GenericTile
+                        class="customTile"
+                        header="Efor Listesi"
+                        subheader="Tüm Eforları Görüntüle"
+                        press="onNavToEforListe"
+                        frameType="TwoByOne">
+                        <TileContent>
+                            <ImageContent src="sap-icon://list"/>
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        class="customTile"
+                        header="Personel Yönetimi"
+                        subheader="Personel kayıtları"
+                        press="onPersonelPress"
+                        frameType="TwoByOne">
+                        <TileContent>
+                            <ImageContent src="sap-icon://person-placeholder"/>
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        class="customTile"
+                        header="Müşteri Yönetimi"
+                        subheader="Müşteri kayıtları"
+                        press="onMusteriPress"
+                        frameType="TwoByOne">
+                        <TileContent>
+                            <ImageContent src="sap-icon://customer"/>
+                        </TileContent>
+                    </GenericTile>
+
+                </l:Grid>
+
+            </VBox>
+
+        </content>
+    </Page>
+</mvc:View>

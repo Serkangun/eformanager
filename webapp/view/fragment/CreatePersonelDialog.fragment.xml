@@ -1,0 +1,24 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form">
+    <Dialog title="Yeni Personel" contentWidth="600px" id="createPersonelDialog">
+        <content>
+            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+                <form:content>
+                    <Label text="Ad" required="true"/>
+                    <Input id="inputname" placeholder="Adı girin" value="{createPersonel>/Name}" maxLength="50"/>
+                    <Label text="Soyad" required="true"/>
+                    <Input id="inputsurname" placeholder="Soyadı girin" value="{createPersonel>/Surname}" maxLength="50"/>
+                    <Label text="E-posta"/>
+                    <Input id="inputemail" placeholder="ornek@domain.com" value="{createPersonel>/Email}" type="Email" maxLength="100"/>
+                    <Label text="Telefon"/>
+                    <Input id="inputtelefon" placeholder="+90 5XX XXX XX XX" value="{createPersonel>/Telefon}" maxLength="20"/>
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="Kaydet" type="Emphasized" press="onSavePersonel"/>
+        </beginButton>
+        <endButton>
+            <Button text="İptal" press="onCancelPersonel"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

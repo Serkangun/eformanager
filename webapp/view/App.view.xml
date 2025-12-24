@@ -1,0 +1,18 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <!-- 🔹 GLOBAL ARKA PLAN -->
+    <VBox
+        class="appBackground"
+        fitContainer="true"
+        height="100%"
+        width="100%">
+
+        <!-- 🔹 ROUTER SAYFALARI -->
+        <App id="app"/>
+
+    </VBox>
+
+</mvc:View>

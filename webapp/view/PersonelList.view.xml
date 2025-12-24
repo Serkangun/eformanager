@@ -1,0 +1,92 @@
+<mvc:View
+    controllerName="eformanager.controller.PersonelList"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    
+    <Page
+        title="Personel Listesi"
+        showNavButton="true"
+        navButtonPress="onNavBack">
+        
+        <content>
+            
+            <!-- Toolbar -->
+            <OverflowToolbar>
+                <Title text="Personel Kayıtları" level="H2"/>
+                <ToolbarSpacer/>
+                <Button
+                    icon="sap-icon://add"
+                    text="Yeni Personel"
+                    type="Emphasized"
+                    press="onCreatePersonel"/>
+                <Button
+                    icon="sap-icon://refresh"
+                    press="onRefresh"/>
+            </OverflowToolbar>
+
+            <!-- Tablo -->
+            <Table
+                id="personelTable"
+                inset="false"
+                items="{
+                    path: '/PersonelSet',
+                    sorter: {
+                        path: 'PersonelId',
+                        descending: false
+                    }
+                }"
+                mode="SingleSelectMaster"
+                growing="true"
+                growingThreshold="20">
+                
+                
+
+                <columns>
+                    <Column width="10em">
+                        <Text text="Personel ID"/>
+                    </Column>
+                    <Column width="12em">
+                        <Text text="Ad"/>
+                    </Column>
+                    <Column width="12em">
+                        <Text text="Soyad"/>
+                    </Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="E-posta"/>
+                    </Column>
+                    <Column width="12em">
+                        <Text text="Telefon"/>
+                    </Column>
+                    <Column width="10em">
+                        <Text text="İşlemler"/>
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem type="Active" press="onPersonelPress">
+                        <cells>
+                            <Text text="{PersonelId}"/>
+                            <Text text="{Name}"/>
+                            <Text text="{Surname}"/>
+                            <Text text="{Email}"/>
+                            <Text text="{Telefon}"/>
+                            <HBox>
+                                <Button
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    press="onEditPersonel"/>
+                                <Button
+                                    icon="sap-icon://delete"
+                                    type="Transparent"
+                                    press="onDeletePersonel"/>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            
+        </content>
+    </Page>
+</mvc:View>

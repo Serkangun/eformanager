@@ -1,0 +1,112 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    
+    <Dialog
+        id="createEforDialog"
+        title="Yeni Efor Oluştur"
+        contentWidth="600px">
+        
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="false">
+                
+                <form:content>
+                    
+                    <!-- Tarih -->
+                    <Label text="Tarih" required="true"/>
+                    <DatePicker
+                        id="inputTarih"
+                        placeholder="Tarih seçin"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="dd.MM.yyyy"
+                        value="{create>/Tarih}"/>
+                    
+                    <!-- İş İsteyen -->
+                    <Label text="İş İsteyen" required="true"/>
+                    <Input
+                        id="inputIsIsteyen"
+                        placeholder="Örn: KS-SYS-001"
+                        value="{create>/IsIsteyen}"
+                        maxLength="20"/>
+                    
+                    <!-- Not Bilgisi -->
+                    <Label text="Not Bilgisi"/>
+                    <TextArea
+                        id="inputNotBilgisi"
+                        placeholder="Açıklama girin"
+                        value="{create>/NotBilgisi}"
+                        rows="3"
+                        maxLength="255"/>
+                    
+                    <!-- Efor (Gün) -->
+                    <Label text="Efor (Gün)" required="true"/>
+                    <Input
+                        id="inputEforGun"
+                        placeholder="Örn: 2.5"
+                        value="{create>/EforGun}"
+                        type="Number"/>
+                    
+                    <!-- Teslim Tarihi -->
+                    <Label text="İş Teslim Tarihi"/>
+                    <DatePicker
+                        id="inputTeslimTarih"
+                        placeholder="Teslim tarihi"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="dd.MM.yyyy"
+                        value="{create>/IsTeslimTarihi}"/>
+                    
+                    <!-- İşin Sahibi -->
+                    <Label text="İşin Sahibi" required="true"/>
+                    <Input
+                        id="inputIsinSahibi"
+                        placeholder="Sorumlu kişi"
+                        value="{create>/IsinSahibi}"
+                        maxLength="50"/>
+                    
+                    <!-- Durum -->
+                    <Label text="Durum" required="true"/>
+                    <Select
+                        id="selectDurum"
+                        selectedKey="{create>/Durum}">
+                        <items>
+                            <core:Item key="Aktif" text="Aktif"/>
+                            <core:Item key="Tamamlandı" text="Tamamlandı"/>
+                            <core:Item key="İptal" text="İptal"/>
+                        </items>
+                    </Select>
+                    
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        
+        <beginButton>
+            <Button
+                text="Kaydet"
+                type="Emphasized"
+                press="onSaveEfor"/>
+        </beginButton>
+        
+        <endButton>
+            <Button
+                text="İptal"
+                press="onCancelEfor"/>
+        </endButton>
+        
+    </Dialog>
+</core:FragmentDefinition>

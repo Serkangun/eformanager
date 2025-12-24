@@ -1,0 +1,84 @@
+<mvc:View
+    controllerName="eformanager.controller.MusteriList"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    
+    <Page
+        title="Müşteri Listesi"
+        showNavButton="true"
+        navButtonPress="onNavBack">
+        
+        <content>
+            
+            <!-- Toolbar -->
+            <OverflowToolbar>
+                <Title text="Müşteri Kayıtları" level="H2"/>
+                <ToolbarSpacer/>
+                <Button
+                    icon="sap-icon://add"
+                    text="Yeni Müşteri"
+                    type="Emphasized"
+                    press="onCreateMusteri"/>
+                <Button
+                    icon="sap-icon://refresh"
+                    press="onRefresh"/>
+            </OverflowToolbar>
+
+            <!-- Tablo -->
+            <Table
+                id="musteriTable"
+                inset="false"
+                items="{
+                    path: '/MusteriSet',
+                    sorter: {
+                        path: 'MusteriId',
+                        descending: false
+                    }
+                }"
+                mode="SingleSelectMaster"
+                growing="true"
+                growingThreshold="20">
+                
+                
+
+                <columns>
+                    <Column width="10em">
+                        <Text text="Müşteri ID"/>
+                    </Column>
+                    <Column width="12em">
+                        <Text text="Müşteri Kodu"/>
+                    </Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true">
+                        <Text text="Müşteri Adı"/>
+                    </Column>
+                    <Column width="10em">
+                        <Text text="İşlemler"/>
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem type="Active" press="onMusteriPress">
+                        <cells>
+                            <Text text="{MusteriId}"/>
+                            <Text text="{MusteriKodu}"/>
+                            <Text text="{MusteriAdi}"/>
+                            <HBox>
+                                <Button
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    press="onEditMusteri"/>
+                                <Button
+                                    icon="sap-icon://delete"
+                                    type="Transparent"
+                                    press="onDeleteMusteri"/>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            
+        </content>
+    </Page>
+</mvc:View>

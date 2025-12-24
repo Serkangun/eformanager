@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form">
+    <Dialog title="Personel Düzenle" contentWidth="600px" id="editPersonelDialog">
+        <content>
+            <form:SimpleForm editable="true" layout="ResponsiveGridLayout" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+                <form:content>
+                    <Label text="Personel ID"/>
+                    <Text text="{editPersonel>/PersonelId}"/>
+                    <Label text="Ad" required="true"/>
+                    <Input id="editInputname" value="{editPersonel>/Name}" maxLength="50"/>
+                    <Label text="Soyad" required="true"/>
+                    <Input id="editInputsurname" value="{editPersonel>/Surname}" maxLength="50"/>
+                    <Label text="E-posta"/>
+                    <Input id="editInputemail" value="{editPersonel>/Email}" type="Email" maxLength="100"/>
+                    <Label text="Telefon"/>
+                    <Input id="editInputtelefon" value="{editPersonel>/Telefon}" maxLength="20"/>
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="Güncelle" type="Emphasized" press="onUpdatePersonel"/>
+        </beginButton>
+        <endButton>
+            <Button text="İptal" press="onCancelEditPersonel"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

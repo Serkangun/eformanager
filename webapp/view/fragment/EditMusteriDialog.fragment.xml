@@ -1,0 +1,69 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    
+    <Dialog
+        id="editMusteriDialog"
+        title="Müşteri Düzenle"
+        contentWidth="600px">
+        
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="false">
+                
+                <form:content>
+                    
+                    <!-- Müşteri ID (read-only) -->
+                    <Label text="Müşteri ID"/>
+                    <Text text="{editMusteri>/MusteriId}"/>
+                    
+                    <!-- Müşteri Kodu -->
+                    <Label text="Müşteri Kodu" required="true"/>
+                    <Input
+                        id="editInputMusteriKodu"
+                        placeholder="Örn: MSTR-001"
+                        value="{editMusteri>/MusteriKodu}"
+                        maxLength="20"/>
+                    
+                    <!-- Müşteri Adı -->
+                    <Label text="Müşteri Adı" required="true"/>
+                    <Input
+                        id="editInputMusteriAdi"
+                        placeholder="Şirket adı girin"
+                        value="{editMusteri>/MusteriAdi}"
+                        maxLength="100"/>
+                    
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        
+        <beginButton>
+            <Button
+                text="Güncelle"
+                type="Emphasized"
+                press="onUpdateMusteri"/>
+        </beginButton>
+        
+        <endButton>
+            <Button
+                text="İptal"
+                press="onCancelEditMusteri"/>
+        </endButton>
+        
+    </Dialog>
+</core:FragmentDefinition>

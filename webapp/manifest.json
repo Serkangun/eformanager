@@ -1,0 +1,131 @@
+{
+  "_version": "1.49.0",
+  "sap.app": {
+    "id": "eformanager",
+    "type": "application",
+    "title": "Efor Yönetim",
+    "description": "Efor, Personel ve Müşteri Yönetimi",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZEFOR_SRV_SRV/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "eformanager.view.App",
+      "type": "XML",
+      "id": "app"
+    },
+
+    
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.ui.layout": {},
+        "sap.ui.export": {},
+        "sap.f": {}
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "eformanager.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "useBatch": false
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "eformanager.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "home",
+          "target": "home"
+        },
+        {
+          "pattern": "eforlist",
+          "name": "eforList",
+          "target": "eforList"
+        },
+        {
+          "pattern": "personel",
+          "name": "personel",
+          "target": "personel"
+        },
+        {
+          "pattern": "musteri",
+          "name": "musteri",
+          "target": "musteri"
+        }
+      ],
+      "targets": {
+        "home": {
+          "viewName": "Home",
+          "viewLevel": 1,
+          "viewType": "XML",
+          "viewId": "Home"
+        },
+        "eforList": {
+          "viewName": "EforList",
+          "viewLevel": 2,
+          "viewType": "XML",
+          "viewId": "EforList"
+        },
+        "personel": {
+          "viewName": "PersonelList",
+          "viewLevel": 2,
+          "viewType": "XML",
+          "viewId": "PersonelList"
+        },
+        "musteri": {
+          "viewName": "MusteriList",
+          "viewLevel": 2,
+          "viewType": "XML",
+          "viewId": "MusteriList"
+        }
+      }
+    }
+  }
+}

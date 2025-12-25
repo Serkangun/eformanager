@@ -1,0 +1,101 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+    
+    <Dialog
+        id="filterDialog"
+        title="Filtrele"
+        contentWidth="500px">
+        
+        <content>
+            <f:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="false">
+                
+                <f:content>
+                    
+                    <!-- Tarih Aralığı -->
+                    <Label text="Başlangıç Tarihi"/>
+                    <DatePicker
+                        id="filterBaslangicTarihi"
+                        placeholder="Başlangıç tarihi seçin"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="dd.MM.yyyy"
+                        value="{filter>/baslangicTarihi}"/>
+                    
+                    <Label text="Bitiş Tarihi"/>
+                    <DatePicker
+                        id="filterBitisTarihi"
+                        placeholder="Bitiş tarihi seçin"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="dd.MM.yyyy"
+                        value="{filter>/bitisTarihi}"/>
+                    
+                    <!-- Müşteri Kodu -->
+                    <Label text="Müşteri (İş İsteyen)"/>
+                    <HBox>
+                        <Input
+                            id="filterMusteriKodu"
+                            value="{filter>/musteriKodu}"
+                            editable="false"
+                            placeholder="Müşteri seçin"
+                            width="85%"/>
+                        <Button
+                            icon="sap-icon://search"
+                            press="onFilterMusteriValueHelp"
+                            tooltip="Müşteri Seç"/>
+                    </HBox>
+                    
+                    <!-- İşin Sahibi -->
+                    <Label text="İşin Sahibi (Personel)"/>
+                    <Input
+                        id="filterPersonel"
+                        placeholder="Personel adı girin"
+                        value="{filter>/personel}"/>
+                    
+                    <!-- Durum -->
+                    <Label text="Durum"/>
+                    <Select
+                        id="filterDurum"
+                        selectedKey="{filter>/durum}">
+                        <items>
+                            <core:Item key="" text="Tümü"/>
+                            <core:Item key="Aktif" text="Aktif"/>
+                            <core:Item key="Tamamlandı" text="Tamamlandı"/>
+                            <core:Item key="İptal" text="İptal"/>
+                        </items>
+                    </Select>
+                    
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        
+        <beginButton>
+            <Button
+                text="Uygula"
+                type="Emphasized"
+                press="onApplyFilter"/>
+        </beginButton>
+        
+        <endButton>
+            <Button
+                text="Temizle"
+                press="onClearFilter"/>
+        </endButton>
+        
+    </Dialog>
+</core:FragmentDefinition>

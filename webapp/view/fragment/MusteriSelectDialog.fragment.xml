@@ -1,0 +1,18 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    
+    <SelectDialog
+        id="musteriSelectDialog"
+        title="Müşteri Seç"
+        noDataText="Müşteri bulunamadı"
+        
+        confirm="onMusteriConfirm"
+        cancel="onMusteriDialogClose"
+        items="{/MusteriSet}">
+        <StandardListItem
+            title="{MusteriKodu}"
+            description="{MusteriAdi}"
+            type="Active"/>
+    </SelectDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,69 @@
+<mvc:View
+    controllerName="eformanager.controller.AyDetay"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    
+    <Page title="{view>/ayBaslik}" showNavButton="true" navButtonPress="onNavBack">
+        <headerContent>
+            <Button
+                icon="sap-icon://excel-attachment"
+                text="Excel"
+                press="onExportToExcel"
+                type="Emphasized"/>
+        </headerContent>
+        
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <HBox justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                    <Text text="Toplam Kayıt: {view>/totalCount}" class="sapUiTinyMarginEnd"/>
+                    <Text text="Toplam Efor: {view>/totalEfor} gün"/>
+                </HBox>
+            </VBox>
+            
+            <Table
+                id="ayEforTable"
+                items="{view>/eforlar}"
+                growing="true"
+                growingThreshold="20">
+                <columns>
+                    <Column width="10%">
+                        <Text text="Tarih"/>
+                    </Column>
+                    <Column width="15%">
+                        <Text text="İş İsteyen"/>
+                    </Column>
+                    <Column width="35%">
+                        <Text text="Not Bilgisi"/>
+                    </Column>
+                    <Column width="10%" hAlign="End">
+                        <Text text="Efor (Gün)"/>
+                    </Column>
+                    <Column width="15%">
+                        <Text text="İşin Sahibi"/>
+                    </Column>
+                    <Column width="10%">
+                        <Text text="Durum"/>
+                    </Column>
+                    <Column width="10%">
+                        <Text text="Teslim Tarihi"/>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{path: 'view>Tarih', formatter: '.formatDate'}"/>
+                            <Text text="{view>IsIsteyen}"/>
+                            <Text text="{view>NotBilgisi}"/>
+                            <Text text="{path: 'view>EforGun', formatter: '.formatEforGun'}"/>
+                            <Text text="{view>IsinSahibi}"/>
+                            <ObjectStatus
+                                text="{view>Durum}"
+                                state="{= ${view>Durum} === 'Aktif' ? 'Success' : ${view>Durum} === 'Tamamlandı' ? 'Information' : 'None'}"/>
+                            <Text text="{path: 'view>IsTeslimTarihi', formatter: '.formatDate'}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

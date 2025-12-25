@@ -4,55 +4,125 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-    "sap/ui/export/Spreadsheet"
-], function (Controller, JSONModel, MessageBox, MessageToast, Fragment, Spreadsheet) {
+    "sap/ui/export/Spreadsheet",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (Controller, JSONModel, MessageBox, MessageToast, Fragment, Spreadsheet, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("eformanager.controller.EforList", {
 
-        onInit: function () {
-            // View model
-            var oViewModel = new JSONModel({
-                totalCount: 0,
-                totalEfor: 0
-            });
-            this.getView().setModel(oViewModel, "view");
+     onInit: function () {
+    // View model
+    var oViewModel = new JSONModel({
+        totalCount: 0,
+        totalEfor: 0,
+        currentMonth: "",
+        hasActiveFilters: false,
+        activeFiltersText: ""
+    });
+    this.getView().setModel(oViewModel, "view");
+    
+    // Filter model
+    var oFilterModel = new JSONModel({
+        baslangicTarihi: "",
+        bitisTarihi: "",
+        musteriKodu: "",
+        personel: "",
+        durum: ""
+    });
+    this.getView().setModel(oFilterModel, "filter");
+    
+    // Create model
+    var oCreateModel = new JSONModel({
+        Tarih: new Date().toISOString().split('T')[0],
+        IsIsteyen: "",
+        NotBilgisi: "",
+        EforGun: "",
+        IsTeslimTarihi: "",
+        IsinSahibi: "",
+        Durum: "Aktif"
+    });
+    this.getView().setModel(oCreateModel, "create");
+    
+    // Edit model
+    var oEditModel = new JSONModel({});
+    this.getView().setModel(oEditModel, "edit");
+    
+    // Bu ayı hesapla ve göster
+    this._setCurrentMonth();
+},
+
+onAfterRendering: function() {
+    // Table'a event listener ekle
+    var oTable = this.byId("eforTable");
+    
+    if (oTable && !this._bTableEventAttached) {
+        this._bTableEventAttached = true;
+        
+        // updateFinished eventi dinle - tablo her güncellendiğinde
+        oTable.attachEventOnce("updateFinished", function() {
+            console.log("Tablo ilk kez yüklendi, filtre uygulanıyor...");
+            this._applyCurrentMonthFilter();
             
-            // Create model
-            var oCreateModel = new JSONModel({
-                Tarih: new Date().toISOString().split('T')[0],
-                IsIsteyen: "",
-                NotBilgisi: "",
-                EforGun: "",
-                IsTeslimTarihi: "",
-                IsinSahibi: "",
-                Durum: "Aktif"
-            });
-            this.getView().setModel(oCreateModel, "create");
-            
-            // Edit model
-            var oEditModel = new JSONModel({});
-            this.getView().setModel(oEditModel, "edit");
-            
-            // Tablo data yüklendiğinde özet hesapla
-            var that = this;
             setTimeout(function() {
-                var oTable = that.byId("eforTable");
-                var oBinding = oTable.getBinding("items");
-                
-                if (oBinding) {
-                    oBinding.attachDataReceived(function() {
-                        setTimeout(function() {
-                            that._updateSummary();
-                        }, 200);
-                    });
-                    oBinding.attachChange(function() {
-                        setTimeout(function() {
-                            that._updateSummary();
-                        }, 200);
-                    });
-                }
-            }, 1000);
+                this._updateSummary();
+            }.bind(this), 100);
+        }.bind(this));
+    }
+},
+
+        _setCurrentMonth: function() {
+            var oToday = new Date();
+            var aAylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+                          "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+            var sCurrentMonth = aAylar[oToday.getMonth()] + " " + oToday.getFullYear();
+            
+            var oViewModel = this.getView().getModel("view");
+            oViewModel.setProperty("/currentMonth", sCurrentMonth);
+            
+            // Filter model'e de bu ayın tarihlerini set et
+            var oFirstDay = new Date(oToday.getFullYear(), oToday.getMonth(), 1);
+            var oLastDay = new Date(oToday.getFullYear(), oToday.getMonth() + 1, 0);
+            
+            var oFilterModel = this.getView().getModel("filter");
+            oFilterModel.setProperty("/baslangicTarihi", oFirstDay.toISOString().split('T')[0]);
+            oFilterModel.setProperty("/bitisTarihi", oLastDay.toISOString().split('T')[0]);
+        },
+
+        _applyCurrentMonthFilter: function() {
+            var oTable = this.byId("eforTable");
+            var oBinding = oTable.getBinding("items");
+            
+            if (!oBinding) {
+                console.log("Binding bulunamadı");
+                return;
+            }
+            
+            var oToday = new Date();
+            var sYear = oToday.getFullYear().toString();
+            var sMonth = (oToday.getMonth() + 1).toString().padStart(2, '0');
+            
+            var sStartDate = sYear + sMonth + "01";
+            var iLastDay = new Date(oToday.getFullYear(), oToday.getMonth() + 1, 0).getDate();
+            var sEndDate = sYear + sMonth + iLastDay.toString().padStart(2, '0');
+            
+            console.log("Bu ayın filtresi uygulanıyor:", sStartDate, "-", sEndDate);
+            
+            var aFilters = [
+                new Filter("Tarih", FilterOperator.GE, sStartDate),
+                new Filter("Tarih", FilterOperator.LE, sEndDate)
+            ];
+            
+            oBinding.filter(new Filter({
+                filters: aFilters,
+                and: true
+            }));
+            
+            // Aktif filtre bilgisini güncelle
+            this._updateActiveFiltersInfo();
+            
+            console.log("Filtre uygulandı - Görünen kayıt sayısı:", oTable.getItems().length);
         },
 
         _updateSummary: function() {
@@ -75,6 +145,38 @@ sap.ui.define([
             var oViewModel = this.getView().getModel("view");
             oViewModel.setProperty("/totalCount", iTotalCount);
             oViewModel.setProperty("/totalEfor", fTotalEfor);
+            
+            console.log("Özet güncellendi - Kayıt:", iTotalCount, "Efor:", fTotalEfor);
+        },
+
+        _updateActiveFiltersInfo: function() {
+            var oFilterModel = this.getView().getModel("filter");
+            var oData = oFilterModel.getData();
+            
+            var aActiveFilters = [];
+            
+            if (oData.baslangicTarihi && oData.bitisTarihi) {
+                aActiveFilters.push("Tarih: " + this._formatDateDisplay(oData.baslangicTarihi) + " - " + this._formatDateDisplay(oData.bitisTarihi));
+            }
+            if (oData.musteriKodu) {
+                aActiveFilters.push("Müşteri: " + oData.musteriKodu);
+            }
+            if (oData.personel) {
+                aActiveFilters.push("Personel: " + oData.personel);
+            }
+            if (oData.durum) {
+                aActiveFilters.push("Durum: " + oData.durum);
+            }
+            
+            var oViewModel = this.getView().getModel("view");
+            oViewModel.setProperty("/hasActiveFilters", aActiveFilters.length > 0);
+            oViewModel.setProperty("/activeFiltersText", aActiveFilters.join(" | "));
+        },
+
+        _formatDateDisplay: function(sDate) {
+            if (!sDate) return "";
+            var aParts = sDate.split("-");
+            return aParts[2] + "." + aParts[1] + "." + aParts[0];
         },
 
         formatDate: function(sDate) {
@@ -116,13 +218,276 @@ sap.ui.define([
         },
 
         onRefresh: function () {
-            this.getView().byId("eforTable").getBinding("items").refresh();
-            MessageToast.show("Liste güncellendi");
+            var oTable = this.byId("eforTable");
+            var oBinding = oTable.getBinding("items");
+            
+            if (oBinding) {
+                var that = this;
+                
+                // Data geldiğinde filtre uygula
+                var fnDataReceived = function() {
+                    oBinding.detachDataReceived(fnDataReceived);
+                    that._applyCurrentMonthFilter();
+                    
+                    setTimeout(function() {
+                        that._updateSummary();
+                    }, 100);
+                };
+                
+                oBinding.attachDataReceived(fnDataReceived);
+                oBinding.refresh();
+                
+                MessageToast.show("Liste güncellendi");
+            }
+        },
+
+        /* ==================== FİLTRELEME ==================== */
+
+        onOpenFilterDialog: function() {
+            var oView = this.getView();
+            
+            if (!this._oFilterDialog) {
+                Fragment.load({
+                    id: oView.getId(),
+                    name: "eformanager.view.fragment.FilterDialog",
+                    controller: this
+                }).then(function(oDialog) {
+                    this._oFilterDialog = oDialog;
+                    oView.addDependent(oDialog);
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._oFilterDialog.open();
+            }
+        },
+
+        onFilterMusteriValueHelp: function() {
+            var oView = this.getView();
+            
+            if (!this._oFilterMusteriDialog) {
+                Fragment.load({
+                    id: oView.getId() + "_filter",
+                    name: "eformanager.view.fragment.MusteriSelectDialog",
+                    controller: this
+                }).then(function(oDialog) {
+                    this._oFilterMusteriDialog = oDialog;
+                    oView.addDependent(oDialog);
+                    
+                    oDialog.attachConfirm(this.onFilterMusteriConfirm, this);
+                    oDialog.attachCancel(this.onFilterMusteriDialogClose, this);
+                    
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._oFilterMusteriDialog.open();
+            }
+        },
+
+        onFilterMusteriConfirm: function(oEvent) {
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            if (oSelectedItem) {
+                var oContext = oSelectedItem.getBindingContext();
+                var sMusteriKodu = oContext.getProperty("MusteriKodu");
+                
+                var oFilterModel = this.getView().getModel("filter");
+                oFilterModel.setProperty("/musteriKodu", sMusteriKodu);
+            }
+        },
+
+        onFilterMusteriDialogClose: function() {
+            if (this._oFilterMusteriDialog) {
+                var oBinding = this._oFilterMusteriDialog.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter([]);
+                }
+            }
+        },
+
+        onApplyFilter: function() {
+            var oFilterModel = this.getView().getModel("filter");
+            var oData = oFilterModel.getData();
+            
+            var oTable = this.byId("eforTable");
+            var oBinding = oTable.getBinding("items");
+            
+            if (!oBinding) {
+                MessageToast.show("Tablo yüklenemedi");
+                return;
+            }
+            
+            // ÖNCELİKLE MEVCUT FİLTRELERİ KALDIR
+            oBinding.filter([]);
+            
+            var aFilters = [];
+            
+            // Tarih Aralığı Filtresi
+            if (oData.baslangicTarihi && oData.bitisTarihi) {
+                var sStartDate = oData.baslangicTarihi.replace(/-/g, "");
+                var sEndDate = oData.bitisTarihi.replace(/-/g, "");
+                
+                console.log("Tarih Filtresi:", sStartDate, "-", sEndDate);
+                
+                aFilters.push(new Filter("Tarih", FilterOperator.GE, sStartDate));
+                aFilters.push(new Filter("Tarih", FilterOperator.LE, sEndDate));
+            }
+            
+            // Müşteri Filtresi
+            if (oData.musteriKodu) {
+                console.log("Müşteri Filtresi:", oData.musteriKodu);
+                aFilters.push(new Filter("IsIsteyen", FilterOperator.EQ, oData.musteriKodu));
+            }
+            
+            // Personel Filtresi
+            if (oData.personel) {
+                console.log("Personel Filtresi:", oData.personel);
+                aFilters.push(new Filter("IsinSahibi", FilterOperator.Contains, oData.personel));
+            }
+            
+            // Durum Filtresi
+            if (oData.durum) {
+                console.log("Durum Filtresi:", oData.durum);
+                aFilters.push(new Filter("Durum", FilterOperator.EQ, oData.durum));
+            }
+            
+            console.log("Toplam Filtre Sayısı:", aFilters.length);
+            
+            // YENİ FİLTRELERİ UYGULA
+            if (aFilters.length > 0) {
+                oBinding.filter(new Filter({
+                    filters: aFilters,
+                    and: true
+                }));
+            }
+            
+            this._oFilterDialog.close();
+            
+            // Aktif filtre bilgisini güncelle
+            this._updateActiveFiltersInfo();
+            
+            // Özeti güncelle
+            setTimeout(function() {
+                this._updateSummary();
+            }.bind(this), 300);
+            
+            MessageToast.show("Filtreler uygulandı");
+        },
+
+        onClearFilter: function() {
+            var oFilterModel = this.getView().getModel("filter");
+            
+            // Bu ayın tarihlerini tekrar set et
+            var oToday = new Date();
+            var oFirstDay = new Date(oToday.getFullYear(), oToday.getMonth(), 1);
+            var oLastDay = new Date(oToday.getFullYear(), oToday.getMonth() + 1, 0);
+            
+            oFilterModel.setData({
+                baslangicTarihi: oFirstDay.toISOString().split('T')[0],
+                bitisTarihi: oLastDay.toISOString().split('T')[0],
+                musteriKodu: "",
+                personel: "",
+                durum: ""
+            });
+            
+            // Bu ayın filtresini uygula
+            this._applyCurrentMonthFilter();
             
             setTimeout(function() {
                 this._updateSummary();
-            }.bind(this), 500);
+            }.bind(this), 200);
+            
+            this._oFilterDialog.close();
+            MessageToast.show("Filtreler temizlendi - Bu ayın kayıtları gösteriliyor");
         },
+
+        onClearAllFilters: function() {
+            this.onClearFilter();
+        },
+
+        /* ==================== MÜŞTERİ SEÇİM ==================== */
+
+        onMusteriValueHelp: function() {
+            var oView = this.getView();
+            
+            if (!this._oMusteriDialog) {
+                Fragment.load({
+                    id: oView.getId(),
+                    name: "eformanager.view.fragment.MusteriSelectDialog",
+                    controller: this
+                }).then(function(oDialog) {
+                    this._oMusteriDialog = oDialog;
+                    oView.addDependent(oDialog);
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._oMusteriDialog.open();
+            }
+        },
+
+        onMusteriConfirm: function(oEvent) {
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            if (oSelectedItem) {
+                var oContext = oSelectedItem.getBindingContext();
+                var sMusteriKodu = oContext.getProperty("MusteriKodu");
+                
+                var oCreateModel = this.getView().getModel("create");
+                oCreateModel.setProperty("/IsIsteyen", sMusteriKodu);
+            }
+        },
+
+        onMusteriDialogClose: function() {
+            if (this._oMusteriDialog) {
+                var oBinding = this._oMusteriDialog.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter([]);
+                }
+            }
+        },
+
+        /* ==================== EDIT İÇİN MÜŞTERİ SEÇİM ==================== */
+
+        onEditMusteriValueHelp: function() {
+            var oView = this.getView();
+            
+            if (!this._oEditMusteriDialog) {
+                Fragment.load({
+                    id: oView.getId() + "_edit",
+                    name: "eformanager.view.fragment.MusteriSelectDialog",
+                    controller: this
+                }).then(function(oDialog) {
+                    this._oEditMusteriDialog = oDialog;
+                    oView.addDependent(oDialog);
+                    
+                    oDialog.attachConfirm(this.onEditMusteriConfirm, this);
+                    oDialog.attachCancel(this.onEditMusteriDialogClose, this);
+                    
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._oEditMusteriDialog.open();
+            }
+        },
+
+        onEditMusteriConfirm: function(oEvent) {
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            if (oSelectedItem) {
+                var oContext = oSelectedItem.getBindingContext();
+                var sMusteriKodu = oContext.getProperty("MusteriKodu");
+                
+                var oEditModel = this.getView().getModel("edit");
+                oEditModel.setProperty("/IsIsteyen", sMusteriKodu);
+            }
+        },
+
+        onEditMusteriDialogClose: function() {
+            if (this._oEditMusteriDialog) {
+                var oBinding = this._oEditMusteriDialog.getBinding("items");
+                if (oBinding) {
+                    oBinding.filter([]);
+                }
+            }
+        },
+
+        /* ==================== EFOR İŞLEMLERİ ==================== */
 
         onCreateEfor: function () {
             var oView = this.getView();
@@ -363,6 +728,9 @@ sap.ui.define([
                 });
             }.bind(this));
 
+            var oViewModel = this.getView().getModel("view");
+            var sCurrentMonth = oViewModel.getProperty("/currentMonth");
+
             var oSettings = {
                 workbook: {
                     columns: [
@@ -375,12 +743,12 @@ sap.ui.define([
                         { label: "Teslim Tarihi", property: "Teslim Tarihi", type: "string", width: 15 }
                     ],
                     context: {
-                        sheetName: "Efor Listesi",
+                        sheetName: sCurrentMonth + " Efor Listesi",
                         metainfo: { author: "Efor Yönetim Sistemi", created: new Date() }
                     }
                 },
                 dataSource: aExcelData,
-                fileName: "Efor_Listesi_" + this._getFormattedDateTime() + ".xlsx",
+                fileName: sCurrentMonth.replace(" ", "_") + "_Efor_Listesi_" + this._getFormattedDateTime() + ".xlsx",
                 worker: false
             };
 

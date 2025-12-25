@@ -6,7 +6,7 @@
     displayBlock="true">
     
     <Page
-        title="Efor Listesi"
+        title="Efor Listesi - {view>/currentMonth}"
         showNavButton="true"
         navButtonPress="onNavBack">
         
@@ -16,6 +16,11 @@
             <OverflowToolbar>
                 <Title text="Efor Kayıtları" level="H2"/>
                 <ToolbarSpacer/>
+                <Button
+                    icon="sap-icon://filter"
+                    text="Filtrele"
+                    press="onOpenFilterDialog"
+                    type="Transparent"/>
                 <Button
                     icon="sap-icon://add"
                     text="Yeni Efor"
@@ -29,6 +34,18 @@
                     icon="sap-icon://refresh"
                     press="onRefresh"/>
             </OverflowToolbar>
+
+            <!-- Aktif Filtreler Bilgisi -->
+            <Toolbar id="filterInfoBar" visible="{view>/hasActiveFilters}">
+                <Text text="Aktif Filtreler:" class="sapUiTinyMarginEnd"/>
+                <Text text="{view>/activeFiltersText}"/>
+                <ToolbarSpacer/>
+                <Button
+                    icon="sap-icon://decline"
+                    text="Filtreleri Temizle"
+                    type="Transparent"
+                    press="onClearAllFilters"/>
+            </Toolbar>
 
             <!-- Özet Panel -->
             <Panel>
@@ -52,9 +69,8 @@
                 inset="false"
                 items="{
                     path: '/EforSet',
-                    sorter: {
-                        path: 'Tarih',
-                        descending: true
+                    parameters: {
+                        operationMode: 'Client'
                     }
                 }"
                 mode="SingleSelectMaster"

@@ -5,6 +5,7 @@ sap.ui.define([
     "use strict";
 
     return UIComponent.extend("eformanager.Component", {
+        
         metadata: {
             manifest: "json"
         },
@@ -12,11 +13,11 @@ sap.ui.define([
         init: function () {
             // call the init function of the parent
             UIComponent.prototype.init.apply(this, arguments);
-
+            
             // create the views based on the url/hash
             this.getRouter().initialize();
         },
-        
+
         getContentDensityClass: function () {
             return "sapUiSizeCompact";
         }

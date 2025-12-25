@@ -1,0 +1,13 @@
+{
+  "base": "./dist",
+  "conn_usestrictssl": false,
+  "conn_server": "http://192.168.1.123:8000",
+  "conn_client": "001",
+  "conn_user": "developer",
+  "conn_password": "Down1oad",
+  "abap_package": "ZEFORMANAGE",
+  "abap_bsp": "Z_EFOR_APP",
+  "abap_bsp_text": "EFOR CRUD Process",
+  "abap_transport": "NPLK900088",
+  "calcappindex": false
+}

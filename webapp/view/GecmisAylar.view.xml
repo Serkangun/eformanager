@@ -1,0 +1,21 @@
+<mvc:View
+    controllerName="eformanager.controller.GecmisAylar"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    
+    <Page title="Geçmiş Aylar Efor Listesi" showNavButton="true" navButtonPress="onNavBack">
+        <content>
+            <List
+                id="ayListesi"
+                items="{view>/gecmisAylar}"
+                noDataText="Geçmiş ay verisi bulunamadı">
+                <StandardListItem
+                    title="{view>ayAdi}"
+                    description="{view>eforSayisi} kayıt - Toplam: {view>toplamEfor} gün"
+                    type="Active"
+                    icon="sap-icon://calendar"
+                    press="onAyPress"/>
+            </List>
+        </content>
+    </Page>
+</mvc:View>

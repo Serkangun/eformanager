@@ -41,13 +41,20 @@
                         displayFormat="dd.MM.yyyy"
                         value="{edit>/Tarih}"/>
                     
-                    <!-- İş İsteyen -->
-                    <Label text="İş İsteyen" required="true"/>
-                    <Input
-                        id="editInputIsIsteyen"
-                        placeholder="Örn: KS-SYS-001"
-                        value="{edit>/IsIsteyen}"
-                        maxLength="20"/>
+                    <!-- İş İsteyen - MÜŞTERİ SEÇİMİ -->
+                    <Label text="İş İsteyen (Müşteri)" required="true"/>
+                    <HBox>
+                        <Input
+                            id="editInputIsIsteyen"
+                            value="{edit>/IsIsteyen}"
+                            editable="false"
+                            placeholder="Müşteri seçin"
+                            width="85%"/>
+                        <Button
+                            icon="sap-icon://search"
+                            press="onEditMusteriValueHelp"
+                            tooltip="Müşteri Seç"/>
+                    </HBox>
                     
                     <!-- Not Bilgisi -->
                     <Label text="Not Bilgisi"/>

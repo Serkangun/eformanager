@@ -4,48 +4,57 @@
     xmlns="sap.m"
     xmlns:l="sap.ui.layout"
     displayBlock="true">
-
     <Page showHeader="false">
-
         <content>
-
             <!-- 🔹 SADECE ARKA PLAN -->
             <VBox class="appBackground"/>
-
+            
             <!-- 🔹 GERÇEK İÇERİK -->
             <VBox
                 class="pageContent sapUiLargeMarginTop"
                 alignItems="Center"
                 width="100%">
-
+                
                 <Title
                     text="POSEIDON CONSULT"
                     level="H1"
                     class="pageTitle sapUiLargeMarginBottom"/>
-
+                
                 <Text
                     text="Efor Yönetim Sistemi"
-                    
                     class="sapUiMediumMarginBottom subtitle"/>
-
+                
+                <!-- 🔹 ÜSTTE TEK BAŞINA EFOR LİSTESİ -->
+                <GenericTile
+                    class="customTile sapUiLargeMarginTop"
+                    header="Efor Listesi"
+                    subheader="Tüm Eforları Görüntüle"
+                    press="onNavToEforListe"
+                    frameType="TwoByOne">
+                    <TileContent>
+                        <ImageContent src="sap-icon://list"/>
+                    </TileContent>
+                </GenericTile>
+                
+                <!-- 🔹 ALTTA DİĞER 3 TILE -->
                 <l:Grid
                     width="100%"
                     defaultSpan="XL4 L4 M6 S12"
                     hSpacing="2"
                     vSpacing="2"
-                    class="sapUiLargeMarginTop">
-
+                    class="sapUiMediumMarginTop">
+                    
                     <GenericTile
                         class="customTile"
-                        header="Efor Listesi"
-                        subheader="Tüm Eforları Görüntüle"
-                        press="onNavToEforListe"
+                        header="Geçmiş Aylar Efor Listesi"
+                        subheader="Geçmiş Ayları Görüntüle"
+                        press="onGecmisAylarPress"
                         frameType="TwoByOne">
                         <TileContent>
                             <ImageContent src="sap-icon://list"/>
                         </TileContent>
                     </GenericTile>
-
+                    
                     <GenericTile
                         class="customTile"
                         header="Personel Yönetimi"
@@ -56,7 +65,7 @@
                             <ImageContent src="sap-icon://person-placeholder"/>
                         </TileContent>
                     </GenericTile>
-
+                    
                     <GenericTile
                         class="customTile"
                         header="Müşteri Yönetimi"
@@ -67,11 +76,9 @@
                             <ImageContent src="sap-icon://customer"/>
                         </TileContent>
                     </GenericTile>
-
+                    
                 </l:Grid>
-
             </VBox>
-
         </content>
     </Page>
 </mvc:View>

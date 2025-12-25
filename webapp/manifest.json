@@ -32,8 +32,6 @@
       "type": "XML",
       "id": "app"
     },
-
-    
     "resources": {
       "css": [
         {
@@ -41,7 +39,6 @@
         }
       ]
     },
-
     "dependencies": {
       "minUI5Version": "1.120.0",
       "libs": {
@@ -98,6 +95,16 @@
           "pattern": "musteri",
           "name": "musteri",
           "target": "musteri"
+        },
+        {
+          "pattern": "gecmis-aylar",
+          "name": "gecmisaylar",
+          "target": "gecmisaylar"
+        },
+        {
+          "pattern": "ay-detay/{ay}",
+          "name": "aydetay",
+          "target": "aydetay"
         }
       ],
       "targets": {
@@ -124,6 +131,18 @@
           "viewLevel": 2,
           "viewType": "XML",
           "viewId": "MusteriList"
+        },
+        "gecmisaylar": {
+          "viewName": "GecmisAylar",
+          "viewLevel": 2,
+          "viewType": "XML",
+          "viewId": "GecmisAylar"
+        },
+        "aydetay": {
+          "viewName": "AyDetay",
+          "viewLevel": 3,
+          "viewType": "XML",
+          "viewId": "AyDetay"
         }
       }
     }
